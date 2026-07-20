@@ -1,0 +1,8 @@
+langchain==0.3.0
+langchain-openai==0.2.0
+langchain-groq==0.2.0
+langchain-ollama==0.2.0
+openai==1.54.0
+python-nmap==0.7.1
+requests==2.32.3
+colorama==0.4.6
