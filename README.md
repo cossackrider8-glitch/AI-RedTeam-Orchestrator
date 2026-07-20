@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="rinnegan-banner.webp" alt="Rinnegan Banner" width="800"/>
+<img src="file%20(1).webp" alt="Rinnegan Banner" width="800"/>
 </p>
 
 # 🟣 AI-RedTeam-Orchestrator
