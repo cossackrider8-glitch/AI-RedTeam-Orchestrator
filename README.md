@@ -1,6 +1,5 @@
-cat > README.md << 'EOF'
 <p align="center">
-  <img src="rinnegan-banner.webp" alt="Rinnegan AI Red Team Banner" width="800"/>
+  <img src="rinnegan-banner.webp" alt="Rinnegan Banner" width="800"/>
 </p>
 
 # 🟣 AI-RedTeam-Orchestrator
@@ -20,7 +19,6 @@ cat > README.md << 'EOF'
 | **🟣 Purple Teamers** | Test detection coverage against AI-simulated adversary TTPs. |
 | **🛡️ SOC Analysts** | Understand how AI can automate attacker decision-making. |
 | **🎓 Security Students** | Learn AI integration in offensive security with free (Groq/Ollama) models. |
-| **💻 Bug Bounty Hunters** | Quickly enumerate targets and get AI-prioritized attack vectors. |
 
 > **⚠️ DISCLAIMER:** This tool is for **educational purposes and AUTHORIZED security testing ONLY**. The author is not responsible for any misuse. Use only on systems you own or have explicit written permission to test.
 
@@ -47,164 +45,84 @@ cd AI-RedTeam-Orchestrator
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-(Wait for all packages to install. This may take 1-2 minutes).
-
 🔑 Configuration (Set Up Your AI Provider)
-This tool works with 5 different AI providers. You only need to pick ONE.
-
 Step 1: Open the config file
 bash
 nano config.py
 Step 2: Choose your provider
-Find this line at the top:
+Find this line:
 
 python
 PROVIDER = "groq"   # <--- CHANGE THIS to switch models
-Provider	Cost	Best For	Model Used
-groq	100% FREE	Fastest AI (LPU hardware), no credit card.	Llama 3 70B
-ollama	100% FREE	Air-gapped/offline testing.	Llama 3 (Local)
-openrouter	Free rate-limited	Mix of free & premium models.	Llama 3 (Free)
-openai	Paid (~$0.01/scan)	Enterprise-grade GPT-4.	GPT-4o-mini
-deepseek	Very Cheap	Alternative to OpenAI.	DeepSeek Chat
+Provider	Cost	Best For
+groq	100% FREE	Fastest AI, no credit card.
+ollama	100% FREE	Air-gapped/offline testing.
+openrouter	Free rate-limited	Mix of free & premium models.
+openai	Paid	Enterprise-grade GPT-4.
 Step 3: Paste your API Key
-Scroll down to the section for your chosen provider and paste your key.
+For Groq (FREE): Get a key at https://console.groq.com/keys
 
-For Groq (100% FREE):
+For OpenAI (Paid): Get a key at https://platform.openai.com/api-keys
 
-Go to https://console.groq.com/keys
-
-Sign up with Google/Email (30 seconds, no credit card).
-
-Click "Create API Key".
-
-Name it redteam-agent.
-
-Copy the key (starts with gsk_...).
+For Ollama (FREE): Install locally, run ollama pull llama3.
 
 Paste it in config.py:
 
 python
 GROQ_API_KEY = "gsk_YOUR_KEY_HERE"
-For OpenAI (Premium):
-
-Go to https://platform.openai.com/api-keys
-
-Add $5 to your account (one-time).
-
-Create a key and paste it:
-
-python
-OPENAI_API_KEY = "sk-YOUR_KEY_HERE"
-For Ollama (100% FREE - Local):
-
-Install Ollama: https://ollama.com
-
-Run ollama pull llama3 in terminal.
-
-No API key needed. Just set PROVIDER = "ollama".
-
 Step 4: Set your Target IP
-Find this line in config.py:
-
 python
 TARGET_IP = "192.168.152.129"   # CHANGE THIS
-Change it to your target machine's IP (e.g., 192.168.1.10 for your Windows VM).
-
-Step 5: Save the file
-Press CTRL + X, then Y, then Enter.
+Save the file: CTRL + X, then Y, then Enter.
 
 🚀 Usage (How to Run)
-Step 1: Make sure you are in the virtual environment
-bash
-cd ~/Desktop/AI-RedTeam-Orchestrator
-source venv/bin/activate
-Step 2: Run the tool
 bash
 python3 orchestrator.py
-What happens next:
-The Violet Rinnegan banner prints.
-
-Nmap scans your target IP for open ports.
-
-The AI (Groq/OpenAI/etc.) analyzes the results.
-
-A full engagement report with MITRE ATT&CK mapping prints on your screen.
-
 Example Output:
 text
 📡 RECONNAISSANCE RESULTS:
-{
-  "host": "192.168.1.10",
-  "state": "up",
-  "protocols": { "tcp": { "445": { "service": "microsoft-ds" } } }
-}
+{ "host": "192.168.1.10", "state": "up" }
 
 🧠 AI-GENERATED ATTACK PLAN:
 1. Open port 445 (SMB) detected. (T1046 - Network Service Scanning)
-2. Potential vulnerability: EternalBlue or SMB Relay. (T1210 - Exploitation of Remote Services)
-3. Recommended exploit: smbclient or Metasploit auxiliary/scanner/smb/smb_ms17_010.
-🔄 How to Switch AI Providers (Change Models)
-You can switch between providers anytime without reinstalling anything.
-
-Step 1: Open config.py:
-
-bash
-nano config.py
-Step 2: Change the PROVIDER line:
+2. Recommended exploit: smbclient.
+🔄 How to Switch AI Providers
+Open config.py and change:
 
 python
 PROVIDER = "groq"      # FREE - Fastest
 PROVIDER = "ollama"    # FREE - Local
 PROVIDER = "openai"    # PAID - GPT-4
-PROVIDER = "openrouter" # FREE+PAID
-PROVIDER = "deepseek"  # CHEAP
-Step 3: Update the API key for the new provider:
+Update the API key for the new provider, save, and run python3 orchestrator.py again.
 
-If switching to groq, fill GROQ_API_KEY.
-
-If switching to openai, fill OPENAI_API_KEY.
-
-If switching to ollama, no key needed.
-
-Step 4: Save and run:
-
-bash
-python3 orchestrator.py
-❓ TROUBLESHOOTING (If It Doesn't Work)
+❓ TROUBLESHOOTING
 Problem	Solution
-ModuleNotFoundError: No module named 'langchain_groq'	Run pip install langchain-groq inside your venv.
-Groq says "Rate limit exceeded"	Groq free tier has limits. Wait 1 minute or switch to Ollama.
-Ollama says "Connection refused"	Make sure Ollama is installed and running: ollama serve
-Nmap scan takes too long	Change SCAN_PORTS in config.py to fewer ports (e.g., "22,80,443").
-API Key invalid error	Double-check you copied the exact key (no extra spaces).
-Permission Denied on Kali	Run chmod +x orchestrator.py and try again.
-Virtual environment not activating	Run source venv/bin/activate (not venv\Scripts\activate).
-🗺️ MITRE ATT&CK Mapping (Industry Standard)
+ModuleNotFoundError	Run pip install langchain-groq
+Groq rate limit	Wait 1 minute or switch to Ollama.
+Ollama connection refused	Run ollama serve in another terminal.
+API Key invalid	Double-check no extra spaces.
+🗺️ MITRE ATT&CK Mapping
 Tactic	Technique ID	Technique Name
 Reconnaissance	T1595	Active Scanning
 Execution	T1059	Command and Scripting Interpreter
 Defense Evasion	T1027	Obfuscated Files or Information
-Lateral Movement	T1210	Exploitation of Remote Services
 📂 Repository Structure
 text
 AI-RedTeam-Orchestrator/
-├── orchestrator.py         # Main AI engine (Rinnegan Banner + Universal LLM)
-├── config.py               # Universal config (Provider + API Keys + Target)
-├── requirements.txt        # Python dependencies
-├── rinnegan-banner.webp    # Violet Banner Image
-└── README.md               # This complete manual
+├── orchestrator.py         # Main AI engine
+├── config.py               # Universal config
+├── requirements.txt        # Dependencies
+├── rinnegan-banner.webp    # Banner Image
+└── README.md               # This manual
 ⚠️ Final Warning
 This tool is for authorized security testing and educational purposes only.
-Unauthorized access to computer systems is illegal. The creator assumes zero liability for misuse. By using this tool, you agree to use it ethically and legally.
-
-🤝 Contributing
-Found a bug or want to add a new provider (e.g., Anthropic, Gemini)?
-Open an issue or submit a Pull Request.
+Unauthorized access is illegal. The creator assumes zero liability for misuse.
 
 📜 License
-MIT License - Free to use, modify, and distribute. See LICENSE for details.
+MIT License - Free to use, modify, and distribute.
 
-Star ⭐ this repo if you found it useful! It helps other cybersecurity professionals find it. 🚀
-MIT License - Free to use, modify, and distribute. See LICENSE for details.
+Star ⭐ this repo if you found it useful! 🚀
 
-Star ⭐ this repo if you found it useful! It helps other cybersecurity professionals find it. 🚀
+MIT License - Free to use, modify, and distribute.
+
+Star ⭐ this repo if you found it useful! 🚀
